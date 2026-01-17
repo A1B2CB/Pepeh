@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>XM Console</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="terminal-title">user@lizetta morimiya: -/profile-terminal</div>
+        </div>
+        <div class="terminal-body">
+            <div class="profile-section">
+                <img src="https://qu.ax/JDCqT.jpg" alt="Foto Profil" class="profile-image" id="profile-image">
+                <div class="profile-info">
+                    <div class="command-line">
+                        <span class="prompt">$</span>
+                        <div class="command-container">
+                            <span class="command" id="cat-command"></span>
+                        </div>
+                    </div>
+                    <div class="output" style="animation-delay: 3s;">
+                        <p>Hi Aky <span class="text-primary">Lizetta Morimiya</span>!</p>
+                        <p>Aku masih <span class="highlight">belaja bang hehe</span></p>
+                        <p>lokasii: <span class="text-secondary">Indonesia/Sulawesi</span></p>
+                        <p>Keahlian: <span class="text-secondary">HTML, CSS, JavaScript, TypeScript, dll.</span></p>
+                    </div>
+                    
+                    <div class="command-line">
+                        <span class="prompt">$</span>
+                        <div class="command-container">
+                            <span class="command" id="social-command"></span>
+                        </div>
+                    </div>
+                    <div class="output" style="animation-delay: 6s;">
+                        <p>List kontak yang tersedia:</p>
+                        <div class="contact-list">
+                            <div class="contact-item">
+                                <i class="fab fa-whatsapp whatsapp-color"></i>
+                                <span>1. WhatsApp</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fab fa-instagram instagram-color"></i>
+                                <span>2. Instagram</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fab fa-github github-color"></i>
+                                <span>3. GitHub</span>
+                            </div>
+                        </div>
+                        <p>Ketik <span class="highlight">[nomor] di terminal</span> untuk membuka tautan</p>
+                    </div>
+                    
+                    <div class="command-line">
+                        <div class="input-container">
+                            <span class="command">$ root@cmd:</span>
+                            <span class="command">~/</span>
+                            <input type="text" id="command-input" autocomplete="off" spellcheck="false" autofocus>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="blue-screen" id="blue-screen">
+        <div class="blue-screen-content">
+            <div class="blue-screen-title">:(</div>
+            <div class="blue-screen-message">
+                Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.
+            </div>
+            <div class="blue-screen-details">
+                For more information about this issue and possible fixes, visit https://www.windows.com/stopcode<br><br>
+                If you call a support person, give them this info:<br>
+                Stop code: INVALID_COMMAND_ERROR
+            </div>
+            <div class="blue-screen-percentage" id="percentage">0% complete</div>
+            <div class="blue-screen-footer">
+                <i class="fas fa-redo"></i> <span id="countdown">10</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            function handleViewport() {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+                
+                if (window.innerWidth <= 767) {
+                    document.body.style.minHeight = window.innerHeight + 'px';
+                } else {
+                    document.body.style.minHeight = '100vh';
+                }
+            }
+            
+            window.addEventListener('resize', handleViewport);
+            handleViewport();
+
+            function typeWriter(element, text, speed, showCursor = true) {
+                let i = 0;
+                const cursor = document.createElement('span');
+                cursor.className = 'typing-cursor';
+                cursor.innerHTML = '';
+                
+                function typing() {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(typing, speed);
+                    } else if (showCursor) {
+                        element.appendChild(cursor);
+                    }
+                }
+
+                const existingCursor = element.querySelector('.typing-cursor');
+                if (existingCursor) {
+                    existingCursor.remove();
+                }
+                
+                element.textContent = '';
+                typing();
+            }
+
+            setTimeout(() => {
+                const catCommand = document.getElementById('cat-command');
+                typeWriter(catCommand, 'cat me.txt', 100, false);
+            }, 500);
+
+            setTimeout(() => {
+                const socialCommand = document.getElementById('social-command');
+                typeWriter(socialCommand, './sosial.sh', 100, false);
+            }, 3500);
+
+            const commandInput = document.getElementById('command-input');
+            const blueScreen = document.getElementById('blue-screen');
+            const percentageElement = document.getElementById('percentage');
+            const countdownElement = document.getElementById('countdown');
+            const contacts = {
+                '1': { url: 'https://wa.me/6285395673670', name: 'WhatsApp' },
+                '2': { url: 'https://www.instagram.com/lizettamorimiya', name: 'Instagram' },
+                '3': { url: 'https://github.com/A1B2CB', name: 'GitHub' }
+            };
+
+            function handleCommandInput(inputElement) {
+                inputElement.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        const input = this.value.trim();
+                        this.value = '';
+                        
+                        if (input === '') return;
+
+                        const outputDiv = document.createElement('div');
+                        outputDiv.className = 'output';
+                        outputDiv.style.animationDelay = '0s';
+                        outputDiv.style.opacity = '1';
+                        
+                        if (contacts[input]) {
+                            outputDiv.innerHTML = `<p>Membuka ${contacts[input].name}...</p>`;
+                            this.parentElement.parentElement.after(outputDiv);
+
+                            setTimeout(() => {
+                                window.open(contacts[input].url, '_blank');
+                            }, 1000);
+                        } else {
+                            blueScreen.style.display = 'flex';
+                            
+                            let seconds = 10;
+                            countdownElement.textContent = seconds;
+                            
+                            const countdownInterval = setInterval(() => {
+                                seconds--;
+                                countdownElement.textContent = seconds;
+                                if (seconds <= 0) {
+                                    clearInterval(countdownInterval);
+                                }
+                            }, 1000);
+
+                            let percentage = 0;
+                            const interval = setInterval(() => {
+                                percentage += Math.floor(Math.random() * 10) + 1;
+                                if (percentage > 100) {
+                                    percentage = 100;
+                                    clearInterval(interval);
+                                    
+                                    setTimeout(() => {
+                                        blueScreen.style.display = 'none';
+                                        
+                                    }, 10000);
+                                }
+                                percentageElement.textContent = `${percentage}% complete`;
+                            }, 100);
+                            
+                            outputDiv.innerHTML = `<p class="text-primary">Error: Pilihan tidak valid. Masukkan nomor 1-3.</p>`;
+                            this.parentElement.parentElement.after(outputDiv);
+                        }
+
+                        const newCommandLine = document.createElement('div');
+                        newCommandLine.className = 'command-line';
+                        newCommandLine.innerHTML = `
+                            <div class="input-container">
+                                <span class="command">$ root@cmd: ~/</span>
+                                <input type="text" class="command-input" autocomplete="off" spellcheck="false">
+                            </div>
+                        `;
+                        outputDiv.after(newCommandLine);
+
+                        setTimeout(() => {
+                            const newInput = newCommandLine.querySelector('input');
+                            newInput.focus();
+                            handleCommandInput(newInput);
+                        }, 50);
+                    }
+                });
+            }
+
+            handleCommandInput(commandInput);
+
+            setTimeout(() => {
+                commandInput.focus();
+            }, 7000);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.altKey && e.key === 'Delete') {
+                    blueScreen.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
